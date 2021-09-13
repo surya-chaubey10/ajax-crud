@@ -16,42 +16,98 @@ class AjaxCrudController extends Controller
 
     public function save(Request $request)
     {
+        if($request->id == ''){
         
-        $data = new AjaxCrud();
+            $data = new AjaxCrud();
 
-	    $upload_file = $request->image;
+            $upload_file = $request->image;
 
-        $path='';
+            $path='';
 
-	   if($upload_file)
-	   {     
+            if($upload_file)
+            {     
 
-		   $filenameWithExt = $request->file('image')->getClientOriginalName();
-            // Get just filename
-			$filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);            
-           // Get just ext
-            $extension = $request->file('image')->getClientOriginalExtension();
-            //Filename to store
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;                       
-          // Upload Image
-		   $path = $request->file('image')->move('image_list', $fileNameToStore);
+                $filenameWithExt = $request->file('image')->getClientOriginalName();
+                    // Get just filename
+                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);            
+                // Get just ext
+                    $extension = $request->file('image')->getClientOriginalExtension();
+                    //Filename to store
+                    $fileNameToStore = $filename.'_'.time().'.'.$extension;                       
+                // Upload Image
+                $path = $request->file('image')->move('image_list', $fileNameToStore);
 
-			 
-	     }
+                
+            }
 
-         $data = new AjaxCrud();
+            $data = new AjaxCrud();
 
-         $data->fullname = $request->fullname;
+            $data->fullname = $request->fullname;
 
-         $data->email = $request->email;
+            $data->email = $request->email;
 
-         $data->gender = $request->gender;
+            $data->gender = $request->gender;
 
-         $data->image = $path;
+            $data->image = $path;
 
-         $data->save();
+            $data->save();
 
-         return Redirect::to('home');
+            return Redirect::to('home');
+
+        }else{
+            $result = AjaxCrud::find($request->id);
+            
+            if($request->file == ''){
+
+                $result->fullname = $request->fullname;
+
+                $result->email = $request->email;
+    
+                $result->gender = $request->gender;
+    
+                $result->image = $request->image;
+
+                $result->save();
+
+                return Redirect::to('home');
+
+            }else{
+
+                
+                $upload_file = $request->file;
+
+                $path='';
+    
+                if($upload_file)
+                {     
+    
+                    $filenameWithExt = $request->file('file')->getClientOriginalName();
+                        // Get just filename
+                        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);            
+                    // Get just ext
+                        $extension = $request->file('file')->getClientOriginalExtension();
+                        //Filename to store
+                        $fileNameToStore = $filename.'_'.time().'.'.$extension;                       
+                    // Upload file
+                    $path = $request->file('file')->move('image_list', $fileNameToStore);
+    
+                    
+                }             
+
+                $result->fullname = $request->fullname;
+
+                $result->email = $request->email;
+    
+                $result->gender = $request->gender;
+    
+                $result->image = $path;
+
+                $result->save();
+
+                return Redirect::to('home');
+
+            }
+        }
          
 
     }
@@ -101,9 +157,10 @@ class AjaxCrudController extends Controller
         ?>    
 
                 <div id="edit_form">
+
                     <h5>Edit Profile :<b> <?php echo $result->fullname;?> </b></h5>
 
-                    <form id="addEditForm" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<?php echo $result->id;?>">
 
                     <label for="fullname">Full Name :</label><br>
                     <input class="form-control " type="text" name="fullname" id="fullname" value="<?php echo $result->fullname;?>"><br><br>
@@ -126,12 +183,12 @@ class AjaxCrudController extends Controller
 
                     <img src="<?php echo $result->image;?>" alt="" width="48" height="48"><br><br>
 
+                    <input type="hidden" name="image" value="<?php echo $result->image ?>">
 
-                    <input class="form-control " type="file" name="image" id="file">
+                    <input class="form-control " type="file" name="file" id="file">
                     <div class="form-text">Select <b>Choose File</b> only if you want to change you profile!</div><br>
 
-                    <input class="from-control btn btn-success" type="submit" value="Submit"><br>
-                    </form>
+                    
                 
                 </div>
 

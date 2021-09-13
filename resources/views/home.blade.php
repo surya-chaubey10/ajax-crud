@@ -15,13 +15,19 @@
     <div class="container pt-5">
         <div class="row ">
             <div class="col-3 border-top border-primary pt-5 pb-2 rounded" >
-                <div id="bl_form">
+                
             
+                        
+
+                <form id="addEditForm" enctype="multipart/form-data">
+
+                    {{csrf_field()}}
+                
+                    <div id="bl_form">
+
                         <h3>Add</h3>
 
-                        <form id="addEditForm" enctype="multipart/form-data">                   
-
-                        {{csrf_field()}}
+                        
                         <label for="fullname">Full Name :</label><br>
                         <input class="form-control " type="text" name="fullname" id="fullname"><br><br>
 
@@ -39,17 +45,17 @@
                         <label for="file">Profile :</label><br>
                         <input class="form-control " type="file" name="image" id="file"><br>
 
-                        <input class="from-control btn btn-success" type="submit" value="Submit"><br>
+                    </div>
 
-                        
-                    </form>
+                    <div id="edit_form"> 
+                    </div>
 
-                </div>
+                        <input class="from-control btn btn-success" type="submit" value="Save"><br>
+                    
+                </form>
 
-                <div id="edit_form"> </div>
-
+                
             </div>
-
 
 
             <div class="col-2">
@@ -95,14 +101,13 @@
                 var edit_id=$(this).val();
                 get_edit_row(edit_id);
 	        });
-
            
         });
 
         $("#addEditForm").submit(function (e) {
-	          e.preventDefault()
+	        e.preventDefault()
 	  
-              let formData = new FormData($('#addEditForm')[0])
+            let formData = new FormData($('#addEditForm')[0])
 
                 $.ajax({
 
@@ -115,9 +120,9 @@
                             show();
                     
                         }
-                    });
+                });
 
-            });
+        });
 
         function show(){
             $.ajax({
